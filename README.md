@@ -259,3 +259,4 @@ To avoid incurring ongoing charges, destroy the infrastructure when you are fini
 - [Google Cloud Dataflow Provided Templates Documentation](https://cloud.google.com/dataflow/docs/guides/templates/provided-templates)
 - [GoogleCloudPlatform/DataflowTemplates GitHub Repository](https://github.com/GoogleCloudPlatform/DataflowTemplates)
 - [`gcp-datastream-mysql-cdc-to-gcs` GitHub Repository](https://github.com/ksmin23/gcp-datastream-mysql-cdc-to-gcs): A foundational project that uses Terraform to provision the first part of the pipeline: streaming real-time database changes from Cloud SQL for MySQL to Google Cloud Storage using Datastream.
+- [`gcp-datastream-cdc-data-pipeline` GitHub Repository](https://github.com/ksmin23/gcp-datastream-cdc-data-pipeline): A complete Terraform setup for creating a secure, private data replication pipeline from Cloud SQL (MySQL) to BigQuery using Datastream and Private Service Connect (PSC).
