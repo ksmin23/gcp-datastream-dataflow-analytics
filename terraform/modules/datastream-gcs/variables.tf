@@ -83,8 +83,6 @@ variable "datastream_name" {
   default     = "mysql-cdc-stream"
 }
 
-
-
 variable "private_service_connection_network" {
   description = "The network resource from the private service connection, used for explicit dependency."
   type        = any
