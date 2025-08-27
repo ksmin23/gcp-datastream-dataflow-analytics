@@ -1,0 +1,43 @@
+# --- General Settings ---
+project_id = "your-gcp-project-id"
+region     = "us-central1"
+
+# --- Network Settings (from network module) ---
+vpc_name = "gcp-ds-cdc-vpc"
+
+# The base CIDR block for the public subnets. Subnets for each availability
+# zone will be carved out of this range.
+public_subnet_cidr = "10.0.0.0/16"
+
+# The base CIDR block for the private subnets.
+private_subnet_cidr = "10.1.0.0/16"
+
+# A dedicated /29 CIDR block for the Datastream PSC subnet.
+# IMPORTANT: This range must NOT overlap with any existing subnets in your VPC.
+# Example: "10.10.0.0/29"
+psc_subnet_cidr_range = "10.10.0.0/29"
+
+# A list of GCP project IDs allowed to connect to the Cloud SQL instance via PSC.
+# IMPORTANT: You must include your own project_id in this list for Datastream to connect.
+allowed_psc_projects = ["your-gcp-project-id", "another-consumer-project-id"]
+
+# --- Datastream and Cloud SQL Settings (from datastream-gcs module) ---
+db_instance_name                  = "mysql-src-ds"
+db_version                        = "MYSQL_8_0"
+db_tier                           = "db-n1-standard-2"
+db_name                           = "sales_db"
+staging_bucket_name               = "your-unique-staging-bucket-name" # Must be a globally unique name
+datastream_psc_name               = "mysql-private-connection-psc"
+datastream_src_conn_profile_name  = "mysql-source-conn-profile"
+datastream_dest_conn_profile_name = "gcs-dest-conn-profile"
+datastream_name                   = "mysql-cdc-stream"
+
+# --- Dataflow and BigQuery Settings (from dataflow-bigquery module) ---
+dataflow_job_name                 = "datastream-to-bigquery-cdc"
+dataflow_template_version         = "2025-08-19-00_RC00"
+dataflow_merge_frequency_minutes  = 5
+dataflow_dead_letter_gcs_path     = "gs://your-unique-staging-bucket-name/dead-letter" # Should be in the same bucket as staging_bucket_name
+dataflow_input_file_format        = "avro"
+bigquery_dataset_name             = "sales_analytics"
+bigquery_staging_dataset_name     = "sales_analytics_temp"
+bigquery_dataset_location         = "US"
