@@ -41,20 +41,22 @@ The Terraform configuration must provision and configure the following GCP servi
 ### 3.2. Security
 - **Principle of Least Privilege:** All service accounts must be granted only the IAM permissions necessary for their function.
     - The `datastream` database user should have the minimal required permissions for replication (`REPLICATION SLAVE`, `SELECT`, `REPLICATION CLIENT`).
-    - The Dataflow worker service account must have roles like `roles/dataflow.worker`, `roles/pubsub.subscriber`, `roles/storage.objectAdmin`, and `roles/bigquery.dataEditor`.
+    - The Dataflow worker service account must have the following roles: `roles/dataflow.worker`, `roles/datastream.viewer`, `roles/storage.objectAdmin`, `roles/bigquery.dataEditor`, `roles/bigquery.jobUser`, and `roles/pubsub.viewer`.
 - **Private Networking:** All communication between GCP services must occur over the private network. The Cloud SQL instance must have its public IP disabled. Datastream's connection to Cloud SQL must be via its private IP through a PSC-based private connection.
 - **Secrets Management:** Database credentials for the `rdsadmin` and `datastream` users should be generated at runtime by Terraform and passed securely.
 
 ### 3.3. Configurability
 - The Terraform project must be highly configurable through variables (`.tfvars`).
 - Key parameters such as `project_id`, `region`, instance names, bucket names, and dataset names must be externalized from the core logic.
-- Performance and cost-related parameters (e.g., Cloud SQL `db_tier`, Dataflow `machine_type`) must be configurable.
+- Performance and cost-related parameters (e.g., Cloud SQL `db_tier`) must be configurable.
 
 ### 3.4. Naming Conventions
 - All resources should follow a consistent naming convention to ensure clarity and manageability.
-- **Recommended Format**: `{prefix}-{environment}-{resource_name}-{suffix}` (e.g., `ds-dev-sql-instance-main`).
+- **Format**: Resource names are typically composed of a prefix and a resource-specific name (e.g., `{prefix}-{resource_name}`). The prefix is defined in the `.tfvars` file (e.g., `gcp-ds-cdc`).
 
 ### 3.5. Monitoring and Alerting
+> **Note:** This is a functional requirement that is not yet implemented in the current Terraform code.
+
 - Basic monitoring and alerting must be configured to ensure pipeline reliability.
 - **Dataflow Job Lag:** A Cloud Monitoring alert should be created to trigger a notification (e.g., via Pub/Sub or Email) if the system lag of the Dataflow streaming job exceeds 5 minutes.
 - **Datastream Latency:** A Cloud Monitoring alert should be created to trigger a notification if the data freshness latency of the Datastream stream exceeds 10 minutes.
@@ -65,14 +67,14 @@ The Terraform configuration must provision and configure the following GCP servi
 
 #### 4.1.1. Cloud SQL for MySQL
 - **MySQL Version:** `MYSQL_8_0`
-- **Tier:** Must be a configurable variable (e.g., `db-n1-standard-1`).
-- **CDC Flags:** The instance must be configured with the necessary flags for binary logging (`log_bin`, `binlog_format=ROW`, etc.) to support Datastream.
+- **Tier:** Must be a configurable variable (e.g., `db-n1-standard-2`).
+- **CDC Configuration:** The instance must be configured to support CDC through the `backup_configuration.binary_log_enabled` setting and appropriate `database_flags` (e.g., `binlog_row_image = "full"`).
 - **PSC Enabled**: The instance must be configured to allow Private Service Connect.
-- **Database Users**: An `rdsadmin` user and a `datastream` user must be created with unique, randomly generated passwords.
+- **Database Users**: `root`, `rdsadmin`, and `datastream` users must be created with unique, randomly generated passwords.
 
 #### 4.1.2. Dataflow (from Template)
-- **Template:** The project will use the Google-provided "Datastream to BigQuery" template.
-- **Machine Type:** Must be a configurable variable (e.g., `n1-standard-1`).
+- **Template:** The project will use the Google-provided "Datastream to BigQuery" template, deployed via the `google_dataflow_flex_template_job` resource.
+- **Machine Type:** *Note: The machine type is not currently configurable and uses the template's default. This can be externalized as a variable in future enhancements.*
 - **Input:** The Dataflow job will be configured to use a Pub/Sub subscription for file notifications.
 - **Dead-Letter Queue:** The job must be configured with a GCS path for its dead-letter queue.
 
@@ -81,7 +83,7 @@ The Terraform configuration must provision and configure the following GCP servi
 
 ### 4.2. Required Resources (High-Level)
 - `google_sql_database_instance`
-- `google_sql_user` (for `rdsadmin` and `datastream`)
+- `google_sql_user` (for `root`, `rdsadmin`, and `datastream`)
 - `google_storage_bucket` (for staging and dead-letter queue)
 - `google_pubsub_topic`
 - `google_storage_notification`
@@ -89,15 +91,13 @@ The Terraform configuration must provision and configure the following GCP servi
 - `google_datastream_private_connection`
 - `google_datastream_connection_profile`
 - `google_datastream_stream`
-- `google_dataflow_job`
+- `google_dataflow_flex_template_job`
 - `google_bigquery_dataset`
 - `google_project_iam_member` / `google_service_account`
-- `google_dns_managed_zone`
 - `google_compute_forwarding_rule` (for PSC)
-- `google_dns_record_set`
 - `google_compute_router`
 - `google_compute_router_nat`
-- `google_monitoring_alert_policy`
+- `google_monitoring_alert_policy` (*Note: Not yet implemented*)
 
 ## 5. Deliverables
 
@@ -108,6 +108,7 @@ The Terraform configuration must provision and configure the following GCP servi
 5.  **Required Outputs**: The root Terraform module must output the following values after a successful `apply` for operational purposes:
     -   Cloud SQL Instance Name
     -   Cloud SQL Instance Private IP
+    -   Cloud SQL PSC Endpoint IP
     -   Admin User Name (`rdsadmin`)
     -   Admin User Password (marked as sensitive)
     -   Datastream User Name (`datastream`)
