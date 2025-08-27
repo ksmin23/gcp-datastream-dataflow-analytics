@@ -1,4 +1,4 @@
-# Gemini CLI Working Guidelines (gcp-datastream-dataflow-for-analytics)
+# Gemini CLI Working Guidelines (gcp-datastream-dataflow-analytics)
 
 This guide helps AI-based development tools like Gemini understand and interact with this project effectively. Its primary purpose is to ensure that any modifications maintain the established architectural principles and coding conventions.
 

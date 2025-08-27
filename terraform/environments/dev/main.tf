@@ -18,7 +18,7 @@ terraform {
 
   backend "gcs" {
     bucket = "tfstate-<YOUR_GCP_PROJECT_ID>" # <-- UPDATE THIS
-    prefix = "gcp-datastream-dataflow-for-analytics/terraform"
+    prefix = "gcp-datastream-dataflow-analytics/terraform"
   }
 }
 
