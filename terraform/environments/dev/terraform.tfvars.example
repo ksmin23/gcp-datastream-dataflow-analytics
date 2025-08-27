@@ -25,7 +25,6 @@ allowed_psc_projects = ["your-gcp-project-id", "another-consumer-project-id"]
 db_instance_name                  = "mysql-src-ds"
 db_version                        = "MYSQL_8_0"
 db_tier                           = "db-n1-standard-2"
-db_name                           = "sales_db"
 staging_bucket_name               = "your-unique-staging-bucket-name" # Must be a globally unique name
 datastream_psc_name               = "mysql-private-connection-psc"
 datastream_src_conn_profile_name  = "mysql-source-conn-profile"

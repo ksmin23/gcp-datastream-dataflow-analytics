@@ -83,17 +83,7 @@ variable "datastream_name" {
   default     = "mysql-cdc-stream"
 }
 
-variable "bigquery_dataset_name" {
-  description = "The name of the BigQuery dataset to be used as the destination."
-  type        = string
-  default     = "datastream_destination_dataset"
-}
 
-variable "bigquery_dataset_location" {
-  description = "The location for the BigQuery dataset."
-  type        = string
-  default     = "US"
-}
 
 variable "private_service_connection_network" {
   description = "The network resource from the private service connection, used for explicit dependency."
