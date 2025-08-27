@@ -258,3 +258,4 @@ To avoid incurring ongoing charges, destroy the infrastructure when you are fini
 - [Implementing Datastream and Dataflow for real-time analytics](https://cloud.google.com/datastream/docs/implementing-datastream-dataflow-analytics)
 - [Google Cloud Dataflow Provided Templates Documentation](https://cloud.google.com/dataflow/docs/guides/templates/provided-templates)
 - [GoogleCloudPlatform/DataflowTemplates GitHub Repository](https://github.com/GoogleCloudPlatform/DataflowTemplates)
+- [`gcp-datastream-mysql-cdc-to-gcs` GitHub Repository](https://github.com/ksmin23/gcp-datastream-mysql-cdc-to-gcs): A foundational project that uses Terraform to provision the first part of the pipeline: streaming real-time database changes from Cloud SQL for MySQL to Google Cloud Storage using Datastream.
