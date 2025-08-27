@@ -42,7 +42,7 @@ This architecture is based on the official Google Cloud reference architecture f
 -   `terraform/environments/`: Contains configurations for each deployment environment (e.g., `dev`). This is the entrypoint for running Terraform commands.
 -   `terraform/modules/`: Contains reusable infrastructure modules.
     -   `network/`: Provisions the VPC, subnets, and a Cloud NAT.
-    -   `datastream-gcs/`: Provisions the data source (Cloud SQL with `rdsadmin` and `datastream` users), PSC endpoint, Private DNS Zone, the GCS staging bucket, Pub/Sub topic, and the Datastream stream.
+    -   `datastream-gcs/`: Provisions the data source (Cloud SQL with `rdsadmin` and `datastream` users), PSC endpoint, the GCS staging bucket, Pub/Sub topic, and the Datastream stream.
     -   `dataflow-bigquery/`: Provisions the BigQuery dataset, a service account for the job, a Pub/Sub subscription, and the Dataflow streaming job.
 -   `terraform/environments/dev/terraform.tfvars.example`: A template for the variables you need to configure for the `dev` environment.
 
